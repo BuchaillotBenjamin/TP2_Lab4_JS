@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Países del Mundo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Países del Mundo</h1>
+    <div id="loading">Cargando países...</div>
+    <table id="paisesTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Capital</th>
+            </tr>
+        </thead>
+        <tbody id="paisesBody"></tbody>
+    </table>
+
+    <script>
+        async function cargarPaises() {
+            try {
+                const response = await fetch('/api/paises');
+                const paises = await response.json();
+                
+                const tbody = document.getElementById('paisesBody');
+                tbody.innerHTML = '';
+                
+                paises.forEach(pais => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${pais.codigoPais}</td>
+                        <td>${pais.nombrePais}</td>
+                        <td>${pais.capitalPais}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('paisesTable').style.display = 'table';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loading').textContent = 'Error al cargar países';
+            }
+        }
+
+        cargarPaises();
+    </script>
+</body>
+</html>
